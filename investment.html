@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Compound Calculator with AI Advice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        #advice {
+            margin-top: 10px;
+            font-size: 16px;
+            text-align: center;
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Investment Compound Calculator</h1>
+        <form id="investment-form">
+            <div class="form-group">
+                <label for="currency">Currency:</label>
+                <select id="currency">
+                    <option value="$">USD ($)</option>
+                    <option value="€">EUR (€)</option>
+                    <option value="£">GBP (£)</option>
+                    <option value="¥">JPY (¥)</option>
+                    <option value="₹">INR (₹)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="principal">Principal Amount:</label>
+                <input type="number" id="principal" required>
+            </div>
+            <div class="form-group">
+                <label for="rate">Annual Interest Rate (%):</label>
+                <input type="number" id="rate" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="years">Number of Years:</label>
+                <input type="number" id="years" required>
+            </div>
+            <div class="form-group">
+                <label for="compounds">Compounds Per Year:</label>
+                <input type="number" id="compounds" required>
+            </div>
+            <button type="button" onclick="calculateInvestment()">Calculate</button>
+        </form>
+        <div id="result"></div>
+        <div id="advice"></div>
+    </div>
+    <script>
+        function calculateInvestment() {
+            const currency = document.getElementById('currency').value;
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value) / 100;
+            const years = parseInt(document.getElementById('years').value);
+            const compounds = parseInt(document.getElementById('compounds').value);
+
+            const amount = principal * Math.pow((1 + rate / compounds), compounds * years);
+            const interest = amount - principal;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <p>Future Value: ${currency}${amount.toFixed(2)}</p>
+                <p>Total Interest Earned: ${currency}${interest.toFixed(2)}</p>
+            `;
+
+            provideAdvice(principal, rate, years, amount, interest);
+        }
+
+        function provideAdvice(principal, rate, years, amount, interest) {
+            const adviceDiv = document.getElementById('advice');
+            let advice = '';
+
+            if (rate < 0.01) {
+                advice = 'Consider looking for investments with higher returns.';
+            } else if (rate >= 0.05 && rate <= 0.1) {
+                advice = 'You have a moderate interest rate, which is generally good for stable investments.';
+            } else if (rate > 0.1) {
+                advice = 'High interest rates can lead to high returns, but also come with higher risk. Be cautious.';
+            }
+
+            if (years < 5) {
+                advice += ' Consider investing for a longer period to maximize your returns.';
+            } else if (years > 20) {
+                advice += ' Investing for a very long period can yield significant returns, but be sure to review your strategy periodically.';
+            }
+
+            if (amount / principal >= 2) {
+                advice += ' Your investment is projected to more than double. Great job!';
+            } else if (amount / principal < 1.5) {
+                advice += ' Your projected returns are relatively modest. You might want to reassess your investment strategy.';
+            }
+
+            adviceDiv.innerHTML = advice;
+        }
+    </script>
+</body>
+</html>

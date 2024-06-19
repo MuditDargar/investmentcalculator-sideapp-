@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Financial Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        section {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: calc(50% - 10px);
+            padding: 10px;
+            margin: 5px 5px 15px 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result, #loan-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Financial Calculator</h1>
+        </header>
+        <main>
+            <section id="basic-calculations">
+                <h2>Basic Calculations</h2>
+                <input type="number" id="num1" placeholder="Enter number">
+                <input type="number" id="num2" placeholder="Enter number">
+                <button onclick="calculate('add')">Add</button>
+                <button onclick="calculate('subtract')">Subtract</button>
+                <button onclick="calculate('multiply')">Multiply</button>
+                <button onclick="calculate('divide')">Divide</button>
+                <button onclick="calculate('percentage')">Percentage</button>
+                <div id="result"></div>
+            </section>
+
+            <section id="loan-calculations">
+                <h2>Loan Calculations</h2>
+                <input type="number" id="loan-amount" placeholder="Loan Amount">
+                <input type="number" id="interest-rate" placeholder="Interest Rate (%)">
+                <input type="number" id="loan-term" placeholder="Loan Term (years)">
+                <button onclick="calculateLoan()">Calculate Loan</button>
+                <div id="loan-result"></div>
+            </section>
+        </main>
+    </div>
+    <script>
+        function calculate(operation) {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            let result;
+
+            if (isNaN(num1) || isNaN(num2)) {
+                result = 'Please enter valid numbers';
+            } else {
+                switch (operation) {
+                    case 'add':
+                        result = num1 + num2;
+                        break;
+                    case 'subtract':
+                        result = num1 - num2;
+                        break;
+                    case 'multiply':
+                        result = num1 * num2;
+                        break;
+                    case 'divide':
+                        result = num1 / num2;
+                        break;
+                    case 'percentage':
+                        result = (num1 / 100) * num2;
+                        break;
+                    default:
+                        result = 'Unknown operation';
+                }
+            }
+
+            document.getElementById('result').innerText = `Result: ${result}`;
+        }
+
+        function calculateLoan() {
+            const amount = parseFloat(document.getElementById('loan-amount').value);
+            const rate = parseFloat(document.getElementById('interest-rate').value) / 100 / 12;
+            const term = parseFloat(document.getElementById('loan-term').value) * 12;
+
+            if (isNaN(amount) || isNaN(rate) || isNaN(term)) {
+                document.getElementById('loan-result').innerText = 'Please enter valid numbers';
+                return;
+            }
+
+            const emi = (amount * rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
+            const totalPayment = emi * term;
+            const totalInterest = totalPayment - amount;
+
+            document.getElementById('loan-result').innerHTML = `
+                <p>EMI: ${emi.toFixed(2)}</p>
+                <p>Total Payment: ${totalPayment.toFixed(2)}</p>
+                <p>Total Interest: ${totalInterest.toFixed(2)}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
